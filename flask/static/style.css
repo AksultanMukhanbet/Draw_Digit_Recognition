@@ -1,0 +1,23 @@
+
+#digit-canvas {
+    border: 2px solid black;
+    border-radius: 5px;
+    /* slightly tinted background colour to distinguish the canvas
+       from the rest of the page */
+    background-color: #f9f9ff;
+    display: block;
+    margin: auto;
+
+    /* https://stackoverflow.com/questions/39050460/drawing-on-canvas-using-touchscreen-devices
+       Prevent nearby text being highlighted when accidentally dragging mouse outside confines of the canvas */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#classification {
+    font-size: 7em;
+}

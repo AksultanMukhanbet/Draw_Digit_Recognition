@@ -1,0 +1,75 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <!-- from bootstrap starter template -->
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!-- custom stylesheet on top of bootstrap -->
+        <link rel="stylesheet" href="static/style.css">
+
+        <title>Digit Classifier</title>
+    </head>
+
+    <body onload="init()">
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <h2 class="text-center">Классификатор цифр</h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <h4 class="text-center">Нарисуйте цифру ниже, чтобы увидеть, как нейронная сеть классифицирует ее.</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <canvas id="digit-canvas" width="200" height="200"></canvas>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mx-auto mt-2">
+                    <div class="text-center">
+                        <button id="clear-button" type="button" onclick="reset()" class="btn btn-primary">Очистить</button>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+
+            <div class="row">
+                <div class="col-md-6 mx-auto text-center">
+                    <h4>Результат:</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mx-auto text-center">
+                    <h2 id="classification"></h2>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mx-auto text-center">
+                    <h5 id="classify-time" class="font-italic"></h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- from bootstrap starter template -->
+        <!-- (jquery slim swapped for full library) -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+        <!-- canvas image encodings -->
+        <script type="text/javascript" src="static/encodings.js"></script>
+        <!-- canvas drawing functionality and classification -->
+        <script type="text/javascript" src="static/drawing-canvas.js"></script>
+    </body>
+</html>
