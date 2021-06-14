@@ -11,10 +11,8 @@ def crop_to_digit(img):
     Crop image to the exact size of the drawn digit
     """
 
-    # assume image is square for simplicity
     img_size = img.size[0]
 
-    # find the edges of the drawn digit (effectively creating a bounding box to crop)
     crop_left = img_size
     crop_right = 0
     crop_up = img_size
@@ -33,16 +31,11 @@ def crop_to_digit(img):
 
 
 def expand_to_square(img):
-    """
-    Expands an image out into square shape (matches width/height to whichever is bigger)
-    """
 
     if img.size[0] > img.size[1]:
-        # width bigger than height; expand height
         expand_amount = (img.size[0] - img.size[1]) // 2
         cropped = ImageOps.expand(img, border=(0, expand_amount, 0, expand_amount))
     else:
-        # height bigger than width; expand width
         expand_amount = (img.size[1] - img.size[0]) // 2
         cropped = ImageOps.expand(img, border=(expand_amount, 0, expand_amount, 0))
 
@@ -50,17 +43,11 @@ def expand_to_square(img):
 
 
 def scale_to_mnist(img):
-    """
-    Shrinks an image down to MNIST scale (20x20) and adds padding up to 28x28
-    """
     scaled = img.resize([20, 20], Image.BICUBIC)
     return ImageOps.expand(scaled, border=4)
 
 
 def center_digit(img):
-    """
-    Centers the digit within the image, based on Center of Mass
-    """
 
     img_size = img.size[0]
     img_data = img.load()
@@ -73,16 +60,13 @@ def center_digit(img):
     s = np.sum(np.sum(m))
 
     if s == 0:
-        # canvas is blank, return nothing
         return None
 
     m = m / s
 
-    # marginal distributions
     dx = np.sum(m, 1)
     dy = np.sum(m, 0)
 
-    # expected values
     cx = np.sum(dx * np.arange(img_size))
     cy = np.sum(dy * np.arange(img_size))
 
@@ -90,8 +74,6 @@ def center_digit(img):
     offset_x = cx - middle
     offset_y = cy - middle
 
-    # https://stackoverflow.com/questions/37584977/translate-image-using-pil
-    # translate digit so that it's center of mass is in the center of the image
     a = 1
     b = 0
     c = round(offset_x)  # left/right (i.e. 5/-5)
@@ -107,27 +89,15 @@ def post_data_to_image(image_data, img_size):
     Converts data from the post form into a PIL Image
     """
 
-    # decode base64 data as bytes
     rle_bytes = np.frombuffer(base64.b64decode(image_data), dtype=np.uint8)
-    # separate bytes out into nibble arrays
-    # (a nibble is 4 bits, or half a byte)
     right_nibbles = rle_bytes & 0xf
     left_nibbles = (rle_bytes >> 4) & 0xf
-    # join those two arrays to get an array of nibbles
-    # with some help from https://stackoverflow.com/a/5347492
     nibbles = np.zeros(rle_bytes.size * 2, dtype=np.uint8)
     nibbles[0::2] = left_nibbles
     nibbles[1::2] = right_nibbles
 
-    # decode nibbles back into the run-length encoding number array
-    # start by making a list of the indexes of the commas in the array
     comma_indexes = [-1] + [i for i, v in enumerate(nibbles) if v == 0] + [len(nibbles)]
-    # split nibble array by comma to get a list of run length encoding numbers
-    # (long and complicated list comprehension, but should be very efficient,
-    #  see https://waymoot.org/home/python_string/)
     rle_nums = ["".join(chr(44 if b == 0 else b + 47) for b in nibbles[comma_indexes[i] + 1:comma_indexes[i + 1]]) for i in range(len(comma_indexes) - 1)]
-
-    # decode run length encoding back into the drawn digit (canvas data)
     pixel_nums = np.zeros(img_size * img_size, dtype=np.uint8)
     pixel_value = 0
     index = 0
@@ -136,11 +106,8 @@ def post_data_to_image(image_data, img_size):
         for j in range(int(length)):
             pixel_nums[index] = pixel_value
             index += 1
-
-        # run of same colour pixels ended, invert pixel colour
         pixel_value = 255 if pixel_value == 0 else 0
 
-    # reshape into 2d array
     reshaped = pixel_nums.reshape((img_size, img_size))
     return Image.fromarray(reshaped)
 
